@@ -1,0 +1,62 @@
+beats:
+  packages:
+    # Install and configure filebeat.
+    filebeat:
+      version: 1.2.2
+      config:
+        filebeat:
+            prospectors:
+              -
+                paths:
+                  - /var/log/application.log
+                input_type: log
+            registry_file: /var/lib/filebeat/registry
+        output:
+          logstash:
+            hosts: ["localhost:5044"]
+            worker: 1
+        logging:
+          to_files: true
+          files:
+            path: /var/log/filebeat
+            name: filebeat
+            rotateeverybytes: 10485760
+    packetbeat:
+      version: 1.2.2
+      interfaces:
+        device: any
+      protocols:
+        dns:
+          ports: [53]
+          include_authorities: true
+          include_additionals: true
+        http:
+          ports: [80, 8080, 8000, 5000, 8002]
+      output:
+        logstash:
+          hosts: ["localhost:5044"]
+          worker: 1
+      logging:
+        to_files: true
+        files:
+          path: /var/log/packetbeat
+          name: packetbeat
+    topbeat:
+      version: 1.2.2
+      input:
+        period: 10
+        procs: [".*"]
+        stats:
+          system: true
+          process: true
+          filesystem: true
+          cpu_per_core: false
+      output:
+        logstash:
+          hosts: ["localhost:5044"]
+          worker: 1
+      logging:
+        to_files: true
+        files:
+          path: /var/log/topbeat
+          name: topbeat
