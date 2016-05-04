@@ -3,3 +3,4 @@ include:
   - .repo
   - .install
   - .conf
+  - .service
