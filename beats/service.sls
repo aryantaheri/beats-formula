@@ -11,6 +11,7 @@ extend:
       - enable: True
       - watch:
         - pkg: {{ current }}
+        - file: /etc/{{ current }}/{{ current }}.yml
       - require:
         - pkg: {{ current }}
 
